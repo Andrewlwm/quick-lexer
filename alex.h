@@ -60,4 +60,4 @@ void addAtom(enum Atomi cod);
 int getNextTk();
 void afisare_atomi();
 
-#endif
+#endif //__ALEX_H
