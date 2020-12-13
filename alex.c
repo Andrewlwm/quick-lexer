@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include "alex.h"
 
+int nAtomi = 0;
 int linie = 1;
 
 const char *numeAtomi[] = {"ID",

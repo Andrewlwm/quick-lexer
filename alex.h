@@ -51,7 +51,8 @@ typedef struct
 } Atom;
 
 Atom atomi[10000]; // vectorul cu atomii extrasi din fisierul de intrare
-int nAtomi;        // numarul de atomi din vectorul atomi
+extern int nAtomi; // numarul de atomi din vectorul atomi
+extern int linie;
 
 char bufin[30001];
 char *pch; // cursor la caracterul curent din bufin
