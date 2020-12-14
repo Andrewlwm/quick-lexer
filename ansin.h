@@ -1,6 +1,7 @@
 #ifndef __ANSIN_H
 #define __ANSIN_H
 
+#define SUCCES 1
 extern int idxCrtAtom;
 
 int factor();

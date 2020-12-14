@@ -16,7 +16,7 @@ int consume(int cod)
     if (atomi[idxCrtAtom].cod == cod)
     {
         idxCrtAtom++;
-        return 1;
+        return SUCCES;
     }
     return 0;
 }
@@ -46,7 +46,7 @@ int program()
     }
     if (consume(FINISH))
     {
-        return 1;
+        return SUCCES;
     } //else err("Lipseste Finish");
 
     idxCrtAtom = startIdx;
@@ -70,7 +70,7 @@ int defVar()
                 {
                     if (consume(SEMICOLON))
                     {
-                        return 1;
+                        return SUCCES;
                     }
                     else
                         err("Lipseste ; la finalul declaratiei de variabila");
@@ -94,15 +94,15 @@ int baseType()
     int startIdx = idxCrtAtom;
     if (consume(TYPE_INT))
     {
-        return 1;
+        return SUCCES;
     }
     else if (consume(TYPE_REAL))
     {
-        return 1;
+        return SUCCES;
     }
     else if (consume(TYPE_STR))
     {
-        return 1;
+        return SUCCES;
     }
     idxCrtAtom = startIdx;
     return 0;
@@ -139,7 +139,7 @@ int defFunc()
                                 {
                                     if (consume(END))
                                     {
-                                        return 1;
+                                        return SUCCES;
                                     }
                                     else
                                         err("Lipseste end in blocul functiei");
@@ -178,13 +178,10 @@ int block()
     {
         for (;;)
         {
-            if (instr())
-            {
-            }
-            else
+            if (!instr())
                 break;
         }
-        return 1;
+        return SUCCES;
     }
     idxCrtAtom = startIdx;
     return 0;
@@ -213,7 +210,7 @@ int funcParams()
                 break;
         }
     }
-    return 1;
+    return SUCCES;
 }
 
 //funcParam ::= ID COLON baseType
@@ -227,7 +224,7 @@ int funcParam()
         {
             if (baseType())
             {
-                return 1;
+                return SUCCES;
             }
             else
                 err("Lipseste tipul de baza din parametrul functiei");
@@ -251,7 +248,7 @@ int instr()
     {
         if (consume(SEMICOLON))
         {
-            return 1;
+            return SUCCES;
         }
         else
             err("Lipseste ; de la finalul expresiei");
@@ -272,7 +269,7 @@ int instr()
                             {
                                 if (consume(END))
                                 {
-                                    return 1;
+                                    return SUCCES;
                                 }
                                 else
                                     err("lipseste end la finalul blocului de dupa ELSE");
@@ -282,7 +279,7 @@ int instr()
                         }
                         else if (consume(END))
                         {
-                            return 1;
+                            return SUCCES;
                         }
                         else
                             err("Lipseste end la finalul if-ului");
@@ -305,7 +302,7 @@ int instr()
         {
             if (consume(SEMICOLON))
             {
-                return 1;
+                return SUCCES;
             }
             else
                 err("Lipseste ; dupa expresia de dupa RETURN");
@@ -325,7 +322,7 @@ int instr()
                     {
                         if (consume(END))
                         {
-                            return 1;
+                            return SUCCES;
                         }
                         else
                             err("Lipseste end la finalul block-ului din while");
@@ -354,7 +351,7 @@ int expr()
 
     if (exprLogic())
     {
-        return 1;
+        return SUCCES;
     }
     idxCrtAtom = startIdx;
     return 0;
@@ -373,7 +370,7 @@ int exprLogic()
             {
                 if (exprAssign())
                 {
-                    //return 1;
+                    //return SUCCES;
                 }
                 else
                     err("Lipseste expresia dupa AND");
@@ -382,7 +379,7 @@ int exprLogic()
             {
                 if (exprAssign())
                 {
-                    //return 1;
+                    //return SUCCES;
                 }
                 else
                     err("Lipseste expresian dupa OR");
@@ -390,7 +387,7 @@ int exprLogic()
             else
                 break;
         }
-        return 1;
+        return SUCCES;
     }
 
     idxCrtAtom = startIdx;
@@ -413,7 +410,7 @@ int exprAssign()
     }
     if (exprComp())
     {
-        return 1;
+        return SUCCES;
     }
     idxCrtAtom = startIdx;
     return 0;
@@ -429,7 +426,7 @@ int exprComp()
         {
             if (exprAdd())
             {
-                return 1;
+                return SUCCES;
             }
             else
                 err("lipsa expresie dupa LESS");
@@ -438,12 +435,12 @@ int exprComp()
         {
             if (exprAdd())
             {
-                return 1;
+                return SUCCES;
             }
             else
                 err("lipsa expresie dupa EQUAL");
         }
-        return 1;
+        return SUCCES;
     }
     idxCrtAtom = startIdx;
     return 0;
@@ -461,7 +458,7 @@ int exprAdd()
             {
                 if (exprMul())
                 {
-                    return 1;
+                    return SUCCES;
                 }
                 else
                     err("lipsa expresie dupa ADD");
@@ -470,7 +467,7 @@ int exprAdd()
             {
                 if (exprMul())
                 {
-                    return 1;
+                    return SUCCES;
                 }
                 else
                     err("lipsa expresie dupa SUB");
@@ -478,7 +475,7 @@ int exprAdd()
             else
                 break;
         }
-        return 1;
+        return SUCCES;
     }
 
     idxCrtAtom = startIdx;
@@ -497,7 +494,7 @@ int exprMul()
             {
                 if (exprPrefix())
                 {
-                    return 1;
+                    return SUCCES;
                 }
                 else
                     err("lipsa expresie dupa MUL");
@@ -506,7 +503,7 @@ int exprMul()
             {
                 if (exprPrefix())
                 {
-                    return 1;
+                    return SUCCES;
                 }
                 else
                     err("lipsa expresie dupa DIV");
@@ -515,7 +512,7 @@ int exprMul()
             else
                 break;
         }
-        return 1;
+        return SUCCES;
     }
 
     idxCrtAtom = startIdx;
@@ -531,7 +528,7 @@ int exprPrefix()
     {
         if (factor())
         {
-            return 1;
+            return SUCCES;
         }
         else
             err("Lipsa factor dupa SUB");
@@ -540,14 +537,14 @@ int exprPrefix()
     {
         if (factor())
         {
-            return 1;
+            return SUCCES;
         }
         else
             err("Lipsa factor dupa NOT");
     }
     else if (factor())
     {
-        return 1;
+        return SUCCES;
     }
 
     idxCrtAtom = startIdx;
@@ -564,15 +561,15 @@ int factor()
 {
     if (consume(INT))
     {
-        return 1;
+        return SUCCES;
     }
     else if (consume(REAL))
     {
-        return 1;
+        return SUCCES;
     }
     else if (consume(STR))
     {
-        return 1;
+        return SUCCES;
     }
     else if (consume(LPAR))
     {
@@ -580,7 +577,7 @@ int factor()
         {
             if (consume(RPAR))
             {
-                return 1;
+                return SUCCES;
             }
             else
                 err("lipsa paranteza dreapta");
@@ -596,7 +593,7 @@ int factor()
             {
                 if (expr())
                 {
-                    while (1)
+                    while (SUCCES)
                     {
                         if (consume(COMMA))
                         {
@@ -608,19 +605,19 @@ int factor()
                     }
                     if (consume(RPAR))
                     {
-                        return 1;
+                        return SUCCES;
                     }
                     else
                         err("lipsa paranteza dreapta");
                 }
                 else if (consume(RPAR))
                 {
-                    return 1;
+                    return SUCCES;
                 }
                 else
                     err("lipsa paranteza dreapta");
             }
-            return 1;
+            return SUCCES;
         }
         return 0;
     }

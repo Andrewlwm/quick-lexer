@@ -15,13 +15,14 @@ int main()
 	bufin[n] = '\0';
 	fclose(fis);
 	pch = bufin; // initializare pch pe prima pozitie din bufin
-				 // extragere atomi
+		// extragere atomi
 
 	while (getNextTk() != FINISH)
 	{
 	}
 	afisare_atomi();
 	// afisare atomi
+
 	putchar('\n');
 	if (program())
 		printf("Sintaxa corecta\n");
