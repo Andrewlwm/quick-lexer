@@ -18,19 +18,15 @@ int consume(int cod)
         idxCrtAtom++;
         return SUCCES;
     }
+
     return FAILURE;
 }
 
-//   ? FAILURE sau o data
-//   + minim o data
-//   * poate sa lipseasca sau sa fie de mai multe ori
-
-//program ::= ( defVar | defFunc | block )* FINISH
 int program()
-{ // true sau false
+{
     int startIdx = idxCrtAtom;
 
-    for (;;)
+    while (1)
     {
         if (defVar())
         {
@@ -44,165 +40,124 @@ int program()
         else
             break;
     }
+
     if (consume(FINISH))
-    {
         return SUCCES;
-    } //else err_msg("Lipseste Finish");
+    //else err_msg("Finish not consumed.");
 
     idxCrtAtom = startIdx;
     return FAILURE;
 }
 
-//defVar ::= VAR ID COLON baseType SEMICOLON
 int defVar()
 {
     int startIdx = idxCrtAtom;
-    // pentru debugging
-    //printf("#defVar %s\n", numeAtom(atomi[idxCrtAtom].cod));
 
-    if (consume(VAR))
+    if (!consume(VAR))
     {
-        if (consume(ID))
-        {
-            if (consume(COLON))
-            {
-                if (baseType())
-                {
-                    if (consume(SEMICOLON))
-                    {
-                        return SUCCES;
-                    }
-                    else
-                        err_msg("Lipseste ; la finalul declaratiei de variabila");
-                }
-                else
-                    err_msg("Lipseste tipul de baza al  variabilei");
-            }
-            else
-                err_msg("Lipseste : dupa numele variabilei");
-        }
-        else
-            err_msg("Lipseste numele variabilei");
+        idxCrtAtom = startIdx;
+        return FAILURE;
     }
-    idxCrtAtom = startIdx;
-    return FAILURE;
+
+    if (!consume(ID))
+        err_msg("Expected `id` in variable declaration.");
+    if (!consume(COLON))
+        err_msg("Expected `:` in variable declaration.");
+    if (!baseType())
+        err_msg("Expected base type in variable declaration.");
+    if (!consume(SEMICOLON))
+        err_msg("Expected ; after variable declaration.");
+
+    return SUCCES;
 }
 
-//baseType ::= TYPE_INT | TYPE_REAL | TYPE_STR
 int baseType()
 {
     int startIdx = idxCrtAtom;
+
     if (consume(TYPE_INT))
-    {
         return SUCCES;
-    }
     else if (consume(TYPE_REAL))
-    {
         return SUCCES;
-    }
     else if (consume(TYPE_STR))
-    {
         return SUCCES;
-    }
+
     idxCrtAtom = startIdx;
     return FAILURE;
 }
 
-//defFunc ::= FUNCTION ID LPAR funcParams RPAR COLON baseType defVar* block END
 int defFunc()
 {
     int startIdx = idxCrtAtom;
 
     if (consume(FUNCTION))
     {
-        if (consume(ID))
+        if (!consume(ID))
+            err_msg("Expected `id` in function definition.");
+        if (!consume(LPAR))
+            err_msg("Expected `(` in function definition.");
+        if (funcParams())
         {
-            if (consume(LPAR))
+        }
+        if (!consume(RPAR))
+            err_msg("Expected `)` in function definition.");
+        if (!consume(COLON))
+            err_msg("Expected `:` in function definition.");
+        if (!baseType())
+            err_msg("Expected return type in function definition.");
+
+        while (1)
+        {
+            if (defVar())
             {
-                if (funcParams())
-                {
-                    if (consume(RPAR))
-                    {
-                        if (consume(COLON))
-                        {
-                            if (baseType())
-                            {
-                                for (;;)
-                                {
-                                    if (defVar())
-                                    {
-                                    }
-                                    else
-                                        break;
-                                }
-                                if (block())
-                                {
-                                    if (consume(END))
-                                    {
-                                        return SUCCES;
-                                    }
-                                    else
-                                        err_msg("Lipseste end in blocul functiei");
-                                }
-                                else
-                                    err_msg("Lipseste blocul functiei");
-                            }
-                            else
-                                err_msg("Lipseste tipul de baza in functie");
-                        }
-                        else
-                            err_msg("Lipseste : in definirea functiei");
-                    }
-                    else
-                        err_msg("Lipseste paranteza dreapta ) in definirea functiei");
-                }
-                else
-                    err_msg("Lipsesc argumentele functiei");
             }
             else
-                err_msg("Lipseste paranteza stanga ( in definirea functiei");
+                break;
         }
-        else
-            err_msg("Lipseste ID-ul in definirea functiei");
+
+        if (!block())
+            err_msg("Function body not defined.");
+        if (!consume(END))
+            err_msg("Expected `end` block in function body.");
+
+        return SUCCES;
     }
+
     idxCrtAtom = startIdx;
     return FAILURE;
 }
 
-//block ::= instr+    (cel putin o data)
 int block()
 {
     int startIdx = idxCrtAtom;
 
     if (instr())
     {
-        for (;;)
+        while (1)
         {
             if (!instr())
                 break;
         }
         return SUCCES;
     }
+
     idxCrtAtom = startIdx;
     return FAILURE;
 }
 
-//funcParams ::= ( funcParam ( COMMA funcParam )* )?
 int funcParams()
 {
     int startIdx = idxCrtAtom;
+
     if (funcParam())
     {
-        for (;;)
+        while (1)
         {
             if (consume(COMMA))
             {
-                if (funcParam())
+                if (!funcParam())
                 {
-                }
-                else
-                {
-                    err_msg("Lipsa paramaetru dupa virgula");
+                    err_msg("Expected parameter after `,`.");
                     return FAILURE;
                 }
             }
@@ -210,179 +165,117 @@ int funcParams()
                 break;
         }
     }
+
     return SUCCES;
 }
 
-//funcParam ::= ID COLON baseType
 int funcParam()
 {
     int startIdx = idxCrtAtom;
 
     if (consume(ID))
     {
-        if (consume(COLON))
-        {
-            if (baseType())
-            {
-                return SUCCES;
-            }
-            else
-                err_msg("Lipseste tipul de baza din parametrul functiei");
-        }
-        else
-            err_msg("Lipseste : din parametrul functiei");
+        if (!consume(COLON))
+            err_msg("Expected `:` in function parameter declaration.");
+        if (!baseType())
+            err_msg("Expected base type in function parameter declaration.");
+
+        return SUCCES;
     }
+
     idxCrtAtom = startIdx;
     return FAILURE;
 }
 
-//instr ::= expr? SEMICOLON
-//     | IF LPAR expr RPAR block ( ELSE block )? END
-//     | RETURN expr SEMICOLON
-//   | WHILE LPAR expr RPAR block END
 int instr()
 {
     int startIdx = idxCrtAtom;
 
     if (expr())
     {
-        if (consume(SEMICOLON))
-        {
-            return SUCCES;
-        }
-        else
-            err_msg("Lipseste ; de la finalul expresiei");
+        if (!consume(SEMICOLON))
+            err_msg("Expected `;` after expression.");
+
+        return SUCCES;
     }
     else if (consume(IF))
     {
-        if (consume(LPAR))
+        if (!consume(LPAR))
+            err_msg("Expected `(` in `if` statement.");
+        if (!expr())
+            err_msg("Expected expression inside `if` parenthesis.");
+        if (!consume(RPAR))
+            err_msg("Expected `)` in `if` statement.");
+        if (!block())
+            err_msg("`if` body not defined.");
+        if (consume(ELSE))
         {
-            if (expr())
-            {
-                if (consume(RPAR))
-                {
-                    if (block())
-                    {
-                        if (consume(ELSE))
-                        {
-                            if (block())
-                            {
-                                if (consume(END))
-                                {
-                                    return SUCCES;
-                                }
-                                else
-                                    err_msg("lipseste end la finalul blocului de dupa ELSE");
-                            }
-                            else
-                                err_msg("Lipseste blocul de dupa ELSE");
-                        }
-                        else if (consume(END))
-                        {
-                            return SUCCES;
-                        }
-                        else
-                            err_msg("Lipseste end la finalul if-ului");
-                    }
-                    else
-                        err_msg("Lipseste block-ul din if");
-                }
-                else
-                    err_msg("Lipseste paranteza dreapta )");
-            }
-            else
-                err_msg("Lipseste expresia dintre parantezele if-ului");
+            if (!block())
+                err_msg("`else` body not defined");
+            if (!consume(END))
+                err_msg("Expected `end` block in `else` body.");
+
+            return SUCCES;
         }
-        else
-            err_msg("Lipseste paranteza stanga (");
+        else if (consume(END))
+            err_msg("Expected `end` block in `if` body.");
+
+        return SUCCES;
     }
     else if (consume(RETURN))
     {
-        if (expr())
-        {
-            if (consume(SEMICOLON))
-            {
-                return SUCCES;
-            }
-            else
-                err_msg("Lipseste ; dupa expresia de dupa RETURN");
-        }
-        else
-            err_msg("LIpseste expresia de dupa RETURN");
+        if (!expr())
+            err_msg("Expected expression after `return`.");
+        if (!consume(SEMICOLON))
+            err_msg("Expected `;` after `return`.");
+
+        return SUCCES;
     }
     else if (consume(WHILE))
     {
-        if (consume(LPAR))
-        {
-            if (expr())
-            {
-                if (consume(RPAR))
-                {
-                    if (block())
-                    {
-                        if (consume(END))
-                        {
-                            return SUCCES;
-                        }
-                        else
-                            err_msg("Lipseste end la finalul block-ului din while");
-                    }
-                    else
-                        err_msg("Lipseste block-ul din interiorul while-ului");
-                }
-                else
-                    err_msg("Lipseste paranteza dreapta ) la while");
-            }
-            else
-                err_msg("Expresie invalida intre parantezele while-ului");
-        }
-        else
-            err_msg("Lipseste paranteza stanga ( la while");
+        if (!consume(LPAR))
+            err_msg("Expected `(` in `while` condition.");
+        if (!expr())
+            err_msg("Invalid expression in `while` condition.");
+        if (!consume(RPAR))
+            err_msg("Expected `)` in `while` condition.");
+        if (!block())
+            err_msg("`while` body not defined.");
+        if (!consume(END))
+            err_msg("Expected `end` block in `while` body.");
+
+        return SUCCES;
     }
 
     idxCrtAtom = startIdx;
     return FAILURE;
 }
 
-// expr ::= exprLogic
 int expr()
 {
     int startIdx = idxCrtAtom;
 
     if (exprLogic())
-    {
         return SUCCES;
-    }
+
     idxCrtAtom = startIdx;
     return FAILURE;
 }
 
-//exprLogic ::= exprAssign ( ( AND | OR ) exprAssign )*
 int exprLogic()
 {
     int startIdx = idxCrtAtom;
 
     if (exprAssign())
     {
-        for (;;)
+        while (1)
         {
             if (consume(AND))
             {
-                if (exprAssign())
-                {
-                    //return SUCCES;
-                }
-                else
-                    err_msg("Lipseste expresia dupa AND");
-            }
-            else if (consume(OR))
-            {
-                if (exprAssign())
-                {
-                    //return SUCCES;
-                }
-                else
-                    err_msg("Lipseste expresian dupa OR");
+                if (!exprAssign())
+                    err_msg("Expected expression after `and`");
+                else if (!consume(OR))
+                    err_msg("Expected expression after `or`");
             }
             else
                 break;
@@ -394,101 +287,79 @@ int exprLogic()
     return FAILURE;
 }
 
-//exprAssign ::= ( ID ASSIGN )? exprComp
 int exprAssign()
 {
     int startIdx = idxCrtAtom;
+
     if (consume(ID))
-    {
-        if (consume(ASSIGN))
-        {
-        }
-        else
-        {
+        if (!consume(ASSIGN))
             idxCrtAtom = startIdx;
-        }
-    }
+
     if (exprComp())
-    {
         return SUCCES;
-    }
+
     idxCrtAtom = startIdx;
     return FAILURE;
 }
 
-//exprComp ::= exprAdd ( ( LESS | EQUAL ) exprAdd )?
 int exprComp()
 {
     int startIdx = idxCrtAtom;
-    if (exprAdd())
+
+    if (!exprAdd())
     {
-        if (consume(LESS))
-        {
-            if (exprAdd())
-            {
-                return SUCCES;
-            }
-            else
-                err_msg("lipsa expresie dupa LESS");
-        }
-        else if (consume(EQUAL))
-        {
-            if (exprAdd())
-            {
-                return SUCCES;
-            }
-            else
-                err_msg("lipsa expresie dupa EQUAL");
-        }
-        return SUCCES;
+        idxCrtAtom = startIdx;
+        return FAILURE;
     }
-    idxCrtAtom = startIdx;
-    return FAILURE;
+
+    if (consume(LESS))
+    {
+        if (!exprAdd())
+            err_msg("Expected expression after `less`.");
+    }
+    if (consume(EQUAL))
+        if (!exprAdd())
+            err_msg("Expected expression after `equal`.");
+
+    return SUCCES;
 }
 
-//exprAdd ::= exprMul ( ( ADD | SUB ) exprMul )*
 int exprAdd()
 {
     int startIdx = idxCrtAtom;
-    if (exprMul())
+
+    if (!exprMul())
     {
-        for (;;)
-        {
-            if (consume(ADD))
-            {
-                if (exprMul())
-                {
-                    return SUCCES;
-                }
-                else
-                    err_msg("lipsa expresie dupa ADD");
-            }
-            else if (consume(SUB))
-            {
-                if (exprMul())
-                {
-                    return SUCCES;
-                }
-                else
-                    err_msg("lipsa expresie dupa SUB");
-            }
-            else
-                break;
-        }
-        return SUCCES;
+        idxCrtAtom = startIdx;
+        return FAILURE;
     }
 
-    idxCrtAtom = startIdx;
-    return FAILURE;
+    while (1)
+    {
+        if (consume(ADD))
+        {
+            if (!exprMul())
+                err_msg("Expected expression after `add`.");
+        }
+        else if (consume(SUB))
+        {
+            if (!exprMul())
+                err_msg("Expected expression after `sub`.");
+        }
+        else
+            break;
+    }
+
+    return SUCCES;
 }
 
-//exprMul ::= exprPrefix ( ( MUL | DIV ) exprPrefix )*
 int exprMul()
 {
     int startIdx = idxCrtAtom;
+
     if (exprPrefix())
     {
-        for (;;)
+        while (1)
         {
             if (consume(MUL))
             {

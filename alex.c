@@ -51,7 +51,7 @@ int getNextTk() // get next token (atom lexical)
   int state = 0; // starea curenta
   char buf[100];
   int n = 0; //nr caractere din buf
-  for (;;)
+  while (1)
   {
     char ch = *pch; // caracterul curent
                     //printf("#%d %c(%d)\n", state, ch, ch); // pt debugging
