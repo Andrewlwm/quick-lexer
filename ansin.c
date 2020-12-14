@@ -7,7 +7,7 @@ int idxCrtAtom = FAILURE;
 
 void err_msg(char *s)
 {
-    fprintf(stderr, "Eroare in linia %d: %s\n", atomi[idxCrtAtom].linie, s); //afiseaza locatia atomului curent si mesajul de eroare
+    fprintf(stderr, "Error on line %d: %s\n", atomi[idxCrtAtom].linie, s); //afiseaza locatia atomului curent si mesajul de eroare
     exit(FAILURE);
 }
 
