@@ -29,14 +29,11 @@ int program()
     while (1)
     {
         if (defVar())
-        {
-        }
+            ;
         else if (defFunc())
-        {
-        }
+            ;
         else if (block())
-        {
-        }
+            ;
         else
             break;
     }
@@ -66,7 +63,7 @@ int defVar()
     if (!baseType())
         err_msg("Expected base type in variable declaration.");
     if (!consume(SEMICOLON))
-        err_msg("Expected ; after variable declaration.");
+        err_msg("Expected `;` after variable declaration.");
 
     return SUCCES;
 }
@@ -411,65 +408,46 @@ int exprPrefix()
 int factor()
 {
     if (consume(INT))
-    {
         return SUCCES;
-    }
     else if (consume(REAL))
-    {
         return SUCCES;
-    }
     else if (consume(STR))
-    {
         return SUCCES;
-    }
     else if (consume(LPAR))
     {
-        if (expr())
-        {
-            if (consume(RPAR))
-            {
-                return SUCCES;
-            }
-            else
-                err_msg("lipsa paranteza dreapta");
-        }
-        else
-            err_msg("expresie gresita intre paranteze");
+        if (!expr())
+            err_msg("Invalid expression in parenthesis.");
+        if (!consume(RPAR))
+            err_msg("Expected `)` after expression.");
+
+        return SUCCES;
     }
     else
     {
-        if (consume(ID))
+        if (!consume(ID))
+            return FAILURE;
+
+        if (consume(LPAR))
         {
-            if (consume(LPAR))
+            if (expr())
             {
-                if (expr())
+                while (1)
                 {
-                    while (SUCCES)
+                    if (consume(COMMA))
                     {
-                        if (consume(COMMA))
-                        {
-                            if (!expr())
-                                err_msg("lipsa expresie dupa virgula");
-                        }
-                        else
-                            break;
-                    }
-                    if (consume(RPAR))
-                    {
-                        return SUCCES;
+                        if (!expr())
+                            err_msg("Expected expression after `,`.");
                     }
                     else
-                        err_msg("lipsa paranteza dreapta");
+                        break;
                 }
-                else if (consume(RPAR))
-                {
-                    return SUCCES;
-                }
-                else
-                    err_msg("lipsa paranteza dreapta");
+                if (!consume(RPAR))
+                    err_msg("Expected `)` after expression.");
             }
-            return SUCCES;
+            else if (!consume(RPAR))
+                err_msg("Expected `)` after expression.");
         }
-        return FAILURE;
+
+        return SUCCES;
     }
 }
