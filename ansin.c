@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int idxCrtAtom = FAILURE;
+int idxCrtAtom = 0;
 
 void err_msg(char *s)
 {
@@ -363,21 +363,13 @@ int exprMul()
         {
             if (consume(MUL))
             {
-                if (exprPrefix())
-                {
-                    return SUCCES;
-                }
-                else
-                    err_msg("lipsa expresie dupa MUL");
+                if (!exprPrefix())
+                    err_msg("Expected expression after `mul`.");
             }
             else if (consume(DIV))
             {
-                if (exprPrefix())
-                {
-                    return SUCCES;
-                }
-                else
-                    err_msg("lipsa expresie dupa DIV");
+                if (!exprPrefix())
+                    err_msg("Expected expression after `div`.");
             }
             else
                 break;
@@ -389,28 +381,23 @@ int exprMul()
     return FAILURE;
 }
 
-//exprPrefix ::= ( SUB | NOT )? factor
 int exprPrefix()
 {
     int startIdx = idxCrtAtom;
 
     if (consume(SUB))
     {
-        if (factor())
-        {
-            return SUCCES;
-        }
-        else
-            err_msg("Lipsa factor dupa SUB");
+        if (!factor())
+            err_msg("Expected factor after `sub`.");
+
+        return SUCCES;
     }
     else if (consume(NOT))
     {
-        if (factor())
-        {
-            return SUCCES;
-        }
-        else
-            err_msg("Lipsa factor dupa NOT");
+        if (!factor())
+            err_msg("Expected factor after `sub`.");
+
+        return SUCCES;
     }
     else if (factor())
     {
@@ -420,12 +407,6 @@ int exprPrefix()
     idxCrtAtom = startIdx;
     return FAILURE;
 }
-
-//factor ::= INT
-//         | REAL
-//        | STR
-//        | LPAR expr RPAR
-//       | ID ( LPAR ( expr ( COMMA expr )* )? RPAR )?
 
 int factor()
 {
