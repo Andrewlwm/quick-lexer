@@ -1,6 +1,8 @@
 #ifndef __ANSIN_H
 #define __ANSIN_H
 
+extern int idxCrtAtom;
+
 int factor();
 int exprPrefix();
 int exprMul();
