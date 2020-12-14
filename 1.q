@@ -14,6 +14,6 @@ while(i<10)  # iterator
     puti(max(i,5));
     i=i+1;
     end
-
+i&
 puts("PI=");
 putr(3.14159);

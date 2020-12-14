@@ -273,9 +273,12 @@ int exprLogic()
             if (consume(AND))
             {
                 if (!exprAssign())
-                    err_msg("Expected expression after `and`");
-                else if (!consume(OR))
-                    err_msg("Expected expression after `or`");
+                    err_msg("Missing expression after `and`.");
+            }
+            else if (consume(OR))
+            {
+                if (!exprAssign())
+                    err_msg("Missing expression after `or`.");
             }
             else
                 break;
