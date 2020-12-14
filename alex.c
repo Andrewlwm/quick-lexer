@@ -334,6 +334,7 @@ int getNextTk() // get next token (atom lexical)
         case 18:
             if (ch == '&')
                 state = 19;
+
             break;
         case 19:
             addAtom(AND);
@@ -348,9 +349,8 @@ int getNextTk() // get next token (atom lexical)
             if (ch == '=')
                 state = 23;
             else
-            {
                 state = 24;
-            }
+
             break;
         case 23:
             addAtom(EQUAL);
@@ -362,9 +362,8 @@ int getNextTk() // get next token (atom lexical)
             if (ch == '=')
                 state = 26;
             else
-            {
                 state = 27;
-            }
+
             break;
         case 26:
             addAtom(NOTEQUAL);
