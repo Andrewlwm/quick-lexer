@@ -9,7 +9,7 @@ int main()
 	fis = fopen("1.q", "rb");
 	if (fis == NULL)
 	{
-		perror("Opening the file.");
+		perror("Opening the file");
 		exit(-1);
 	}
 	int n = fread(bufin, 1, 30000, fis); // returneaza nr de elemente citite integral
