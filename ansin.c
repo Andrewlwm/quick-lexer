@@ -399,7 +399,7 @@ int exprPrefix()
     else if (consume(NOT))
     {
         if (!factor())
-            err_msg("Expected factor after `sub`.");
+            err_msg("Expected factor after `not`.");
 
         return SUCCES;
     }
