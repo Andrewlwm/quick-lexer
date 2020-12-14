@@ -402,19 +402,19 @@ void afisare_atomi()
     {
       if (atomi[i].linie == j)
       {
-        if (numeAtomi[atomi[i].cod] == "INT")
+        if (strcmp(numeAtomi[atomi[i].cod], "INT") == 0)
         {
           printf("%s:%d ", numeAtomi[atomi[i].cod], atomi[i].i);
         }
-        else if (numeAtomi[atomi[i].cod] == "REAL")
+        else if (strcmp(numeAtomi[atomi[i].cod], "REAL") == 0)
         {
           printf("%s:%f ", numeAtomi[atomi[i].cod], atomi[i].r);
         }
-        else if (numeAtomi[atomi[i].cod] == "STR")
+        else if (strcmp(numeAtomi[atomi[i].cod], "STR") == 0)
         {
           printf("%s:%s ", numeAtomi[atomi[i].cod], atomi[i].s);
         }
-        else if (numeAtomi[atomi[i].cod] == "ID")
+        else if (strcmp(numeAtomi[atomi[i].cod], "ID") == 0)
         {
           printf("%s:%s ", numeAtomi[atomi[i].cod], atomi[i].s);
         }

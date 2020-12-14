@@ -158,6 +158,7 @@ int funcParams()
                 if (!funcParam())
                 {
                     err_msg("Expected parameter after `,`.");
+                    idxCrtAtom = startIdx;
                     return FAILURE;
                 }
             }
