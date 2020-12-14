@@ -5,7 +5,7 @@
 
 int idxCrtAtom = FAILURE;
 
-void err(char *s)
+void err_msg(char *s)
 {
     fprintf(stderr, "Eroare in linia %d: %s\n", atomi[idxCrtAtom].linie, s); //afiseaza locatia atomului curent si mesajul de eroare
     exit(FAILURE);
@@ -47,7 +47,7 @@ int program()
     if (consume(FINISH))
     {
         return SUCCES;
-    } //else err("Lipseste Finish");
+    } //else err_msg("Lipseste Finish");
 
     idxCrtAtom = startIdx;
     return FAILURE;
@@ -73,16 +73,16 @@ int defVar()
                         return SUCCES;
                     }
                     else
-                        err("Lipseste ; la finalul declaratiei de variabila");
+                        err_msg("Lipseste ; la finalul declaratiei de variabila");
                 }
                 else
-                    err("Lipseste tipul de baza al  variabilei");
+                    err_msg("Lipseste tipul de baza al  variabilei");
             }
             else
-                err("Lipseste : dupa numele variabilei");
+                err_msg("Lipseste : dupa numele variabilei");
         }
         else
-            err("Lipseste numele variabilei");
+            err_msg("Lipseste numele variabilei");
     }
     idxCrtAtom = startIdx;
     return FAILURE;
@@ -142,28 +142,28 @@ int defFunc()
                                         return SUCCES;
                                     }
                                     else
-                                        err("Lipseste end in blocul functiei");
+                                        err_msg("Lipseste end in blocul functiei");
                                 }
                                 else
-                                    err("Lipseste blocul functiei");
+                                    err_msg("Lipseste blocul functiei");
                             }
                             else
-                                err("Lipseste tipul de baza in functie");
+                                err_msg("Lipseste tipul de baza in functie");
                         }
                         else
-                            err("Lipseste : in definirea functiei");
+                            err_msg("Lipseste : in definirea functiei");
                     }
                     else
-                        err("Lipseste paranteza dreapta ) in definirea functiei");
+                        err_msg("Lipseste paranteza dreapta ) in definirea functiei");
                 }
                 else
-                    err("Lipsesc argumentele functiei");
+                    err_msg("Lipsesc argumentele functiei");
             }
             else
-                err("Lipseste paranteza stanga ( in definirea functiei");
+                err_msg("Lipseste paranteza stanga ( in definirea functiei");
         }
         else
-            err("Lipseste ID-ul in definirea functiei");
+            err_msg("Lipseste ID-ul in definirea functiei");
     }
     idxCrtAtom = startIdx;
     return FAILURE;
@@ -202,7 +202,7 @@ int funcParams()
                 }
                 else
                 {
-                    err("Lipsa paramaetru dupa virgula");
+                    err_msg("Lipsa paramaetru dupa virgula");
                     return FAILURE;
                 }
             }
@@ -227,10 +227,10 @@ int funcParam()
                 return SUCCES;
             }
             else
-                err("Lipseste tipul de baza din parametrul functiei");
+                err_msg("Lipseste tipul de baza din parametrul functiei");
         }
         else
-            err("Lipseste : din parametrul functiei");
+            err_msg("Lipseste : din parametrul functiei");
     }
     idxCrtAtom = startIdx;
     return FAILURE;
@@ -251,7 +251,7 @@ int instr()
             return SUCCES;
         }
         else
-            err("Lipseste ; de la finalul expresiei");
+            err_msg("Lipseste ; de la finalul expresiei");
     }
     else if (consume(IF))
     {
@@ -272,29 +272,29 @@ int instr()
                                     return SUCCES;
                                 }
                                 else
-                                    err("lipseste end la finalul blocului de dupa ELSE");
+                                    err_msg("lipseste end la finalul blocului de dupa ELSE");
                             }
                             else
-                                err("Lipseste blocul de dupa ELSE");
+                                err_msg("Lipseste blocul de dupa ELSE");
                         }
                         else if (consume(END))
                         {
                             return SUCCES;
                         }
                         else
-                            err("Lipseste end la finalul if-ului");
+                            err_msg("Lipseste end la finalul if-ului");
                     }
                     else
-                        err("Lipseste block-ul din if");
+                        err_msg("Lipseste block-ul din if");
                 }
                 else
-                    err("Lipseste paranteza dreapta )");
+                    err_msg("Lipseste paranteza dreapta )");
             }
             else
-                err("Lipseste expresia dintre parantezele if-ului");
+                err_msg("Lipseste expresia dintre parantezele if-ului");
         }
         else
-            err("Lipseste paranteza stanga (");
+            err_msg("Lipseste paranteza stanga (");
     }
     else if (consume(RETURN))
     {
@@ -305,10 +305,10 @@ int instr()
                 return SUCCES;
             }
             else
-                err("Lipseste ; dupa expresia de dupa RETURN");
+                err_msg("Lipseste ; dupa expresia de dupa RETURN");
         }
         else
-            err("LIpseste expresia de dupa RETURN");
+            err_msg("LIpseste expresia de dupa RETURN");
     }
     else if (consume(WHILE))
     {
@@ -325,19 +325,19 @@ int instr()
                             return SUCCES;
                         }
                         else
-                            err("Lipseste end la finalul block-ului din while");
+                            err_msg("Lipseste end la finalul block-ului din while");
                     }
                     else
-                        err("Lipseste block-ul din interiorul while-ului");
+                        err_msg("Lipseste block-ul din interiorul while-ului");
                 }
                 else
-                    err("Lipseste paranteza dreapta ) la while");
+                    err_msg("Lipseste paranteza dreapta ) la while");
             }
             else
-                err("Expresie invalida intre parantezele while-ului");
+                err_msg("Expresie invalida intre parantezele while-ului");
         }
         else
-            err("Lipseste paranteza stanga ( la while");
+            err_msg("Lipseste paranteza stanga ( la while");
     }
 
     idxCrtAtom = startIdx;
@@ -373,7 +373,7 @@ int exprLogic()
                     //return SUCCES;
                 }
                 else
-                    err("Lipseste expresia dupa AND");
+                    err_msg("Lipseste expresia dupa AND");
             }
             else if (consume(OR))
             {
@@ -382,7 +382,7 @@ int exprLogic()
                     //return SUCCES;
                 }
                 else
-                    err("Lipseste expresian dupa OR");
+                    err_msg("Lipseste expresian dupa OR");
             }
             else
                 break;
@@ -429,7 +429,7 @@ int exprComp()
                 return SUCCES;
             }
             else
-                err("lipsa expresie dupa LESS");
+                err_msg("lipsa expresie dupa LESS");
         }
         else if (consume(EQUAL))
         {
@@ -438,7 +438,7 @@ int exprComp()
                 return SUCCES;
             }
             else
-                err("lipsa expresie dupa EQUAL");
+                err_msg("lipsa expresie dupa EQUAL");
         }
         return SUCCES;
     }
@@ -461,7 +461,7 @@ int exprAdd()
                     return SUCCES;
                 }
                 else
-                    err("lipsa expresie dupa ADD");
+                    err_msg("lipsa expresie dupa ADD");
             }
             else if (consume(SUB))
             {
@@ -470,7 +470,7 @@ int exprAdd()
                     return SUCCES;
                 }
                 else
-                    err("lipsa expresie dupa SUB");
+                    err_msg("lipsa expresie dupa SUB");
             }
             else
                 break;
@@ -497,7 +497,7 @@ int exprMul()
                     return SUCCES;
                 }
                 else
-                    err("lipsa expresie dupa MUL");
+                    err_msg("lipsa expresie dupa MUL");
             }
             else if (consume(DIV))
             {
@@ -506,7 +506,7 @@ int exprMul()
                     return SUCCES;
                 }
                 else
-                    err("lipsa expresie dupa DIV");
+                    err_msg("lipsa expresie dupa DIV");
             }
             else
                 break;
@@ -530,7 +530,7 @@ int exprPrefix()
             return SUCCES;
         }
         else
-            err("Lipsa factor dupa SUB");
+            err_msg("Lipsa factor dupa SUB");
     }
     else if (consume(NOT))
     {
@@ -539,7 +539,7 @@ int exprPrefix()
             return SUCCES;
         }
         else
-            err("Lipsa factor dupa NOT");
+            err_msg("Lipsa factor dupa NOT");
     }
     else if (factor())
     {
@@ -579,10 +579,10 @@ int factor()
                 return SUCCES;
             }
             else
-                err("lipsa paranteza dreapta");
+                err_msg("lipsa paranteza dreapta");
         }
         else
-            err("expresie gresita intre paranteze");
+            err_msg("expresie gresita intre paranteze");
     }
     else
     {
@@ -597,7 +597,7 @@ int factor()
                         if (consume(COMMA))
                         {
                             if (!expr())
-                                err("lipsa expresie dupa virgula");
+                                err_msg("lipsa expresie dupa virgula");
                         }
                         else
                             break;
@@ -607,14 +607,14 @@ int factor()
                         return SUCCES;
                     }
                     else
-                        err("lipsa paranteza dreapta");
+                        err_msg("lipsa paranteza dreapta");
                 }
                 else if (consume(RPAR))
                 {
                     return SUCCES;
                 }
                 else
-                    err("lipsa paranteza dreapta");
+                    err_msg("lipsa paranteza dreapta");
             }
             return SUCCES;
         }

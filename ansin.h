@@ -5,6 +5,7 @@
 #define FAILURE 0
 extern int idxCrtAtom;
 
+void err_msg(char *s);
 int factor();
 int exprPrefix();
 int exprMul();
