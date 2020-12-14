@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -DDEBUG -o
+CFLAGS=-Wall -g -o
 
 source: source.c ansin.c alex.c
 	$(CC) $(CFLAGS) source source.c ansin.c alex.c
