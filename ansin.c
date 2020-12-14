@@ -29,11 +29,14 @@ int program()
     while (1)
     {
         if (defVar())
-            ;
+        {
+        }
         else if (defFunc())
-            ;
+        {
+        }
         else if (block())
-            ;
+        {
+        }
         else
             break;
     }
