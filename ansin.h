@@ -2,6 +2,7 @@
 #define __ANSIN_H
 
 #define SUCCES 1
+#define FAILURE 0
 extern int idxCrtAtom;
 
 int factor();

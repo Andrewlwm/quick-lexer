@@ -3,12 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int idxCrtAtom = 0;
+int idxCrtAtom = FAILURE;
 
 void err(char *s)
 {
     fprintf(stderr, "Eroare in linia %d: %s\n", atomi[idxCrtAtom].linie, s); //afiseaza locatia atomului curent si mesajul de eroare
-    exit(0);
+    exit(FAILURE);
 }
 
 int consume(int cod)
@@ -18,10 +18,10 @@ int consume(int cod)
         idxCrtAtom++;
         return SUCCES;
     }
-    return 0;
+    return FAILURE;
 }
 
-//   ? 0 sau o data
+//   ? FAILURE sau o data
 //   + minim o data
 //   * poate sa lipseasca sau sa fie de mai multe ori
 
@@ -50,7 +50,7 @@ int program()
     } //else err("Lipseste Finish");
 
     idxCrtAtom = startIdx;
-    return 0;
+    return FAILURE;
 }
 
 //defVar ::= VAR ID COLON baseType SEMICOLON
@@ -85,7 +85,7 @@ int defVar()
             err("Lipseste numele variabilei");
     }
     idxCrtAtom = startIdx;
-    return 0;
+    return FAILURE;
 }
 
 //baseType ::= TYPE_INT | TYPE_REAL | TYPE_STR
@@ -105,7 +105,7 @@ int baseType()
         return SUCCES;
     }
     idxCrtAtom = startIdx;
-    return 0;
+    return FAILURE;
 }
 
 //defFunc ::= FUNCTION ID LPAR funcParams RPAR COLON baseType defVar* block END
@@ -166,7 +166,7 @@ int defFunc()
             err("Lipseste ID-ul in definirea functiei");
     }
     idxCrtAtom = startIdx;
-    return 0;
+    return FAILURE;
 }
 
 //block ::= instr+    (cel putin o data)
@@ -184,7 +184,7 @@ int block()
         return SUCCES;
     }
     idxCrtAtom = startIdx;
-    return 0;
+    return FAILURE;
 }
 
 //funcParams ::= ( funcParam ( COMMA funcParam )* )?
@@ -203,7 +203,7 @@ int funcParams()
                 else
                 {
                     err("Lipsa paramaetru dupa virgula");
-                    return 0;
+                    return FAILURE;
                 }
             }
             else
@@ -233,7 +233,7 @@ int funcParam()
             err("Lipseste : din parametrul functiei");
     }
     idxCrtAtom = startIdx;
-    return 0;
+    return FAILURE;
 }
 
 //instr ::= expr? SEMICOLON
@@ -341,7 +341,7 @@ int instr()
     }
 
     idxCrtAtom = startIdx;
-    return 0;
+    return FAILURE;
 }
 
 // expr ::= exprLogic
@@ -354,7 +354,7 @@ int expr()
         return SUCCES;
     }
     idxCrtAtom = startIdx;
-    return 0;
+    return FAILURE;
 }
 
 //exprLogic ::= exprAssign ( ( AND | OR ) exprAssign )*
@@ -391,7 +391,7 @@ int exprLogic()
     }
 
     idxCrtAtom = startIdx;
-    return 0;
+    return FAILURE;
 }
 
 //exprAssign ::= ( ID ASSIGN )? exprComp
@@ -413,7 +413,7 @@ int exprAssign()
         return SUCCES;
     }
     idxCrtAtom = startIdx;
-    return 0;
+    return FAILURE;
 }
 
 //exprComp ::= exprAdd ( ( LESS | EQUAL ) exprAdd )?
@@ -443,7 +443,7 @@ int exprComp()
         return SUCCES;
     }
     idxCrtAtom = startIdx;
-    return 0;
+    return FAILURE;
 }
 
 //exprAdd ::= exprMul ( ( ADD | SUB ) exprMul )*
@@ -479,7 +479,7 @@ int exprAdd()
     }
 
     idxCrtAtom = startIdx;
-    return 0;
+    return FAILURE;
 }
 
 //exprMul ::= exprPrefix ( ( MUL | DIV ) exprPrefix )*
@@ -508,7 +508,6 @@ int exprMul()
                 else
                     err("lipsa expresie dupa DIV");
             }
-
             else
                 break;
         }
@@ -516,7 +515,7 @@ int exprMul()
     }
 
     idxCrtAtom = startIdx;
-    return 0;
+    return FAILURE;
 }
 
 //exprPrefix ::= ( SUB | NOT )? factor
@@ -548,7 +547,7 @@ int exprPrefix()
     }
 
     idxCrtAtom = startIdx;
-    return 0;
+    return FAILURE;
 }
 
 //factor ::= INT
@@ -619,6 +618,6 @@ int factor()
             }
             return SUCCES;
         }
-        return 0;
+        return FAILURE;
     }
 }
