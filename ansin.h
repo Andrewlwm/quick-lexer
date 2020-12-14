@@ -2,8 +2,8 @@
 #define __ANSIN_H
 #include <stdint-gcc.h>
 
-static const uint8_t SUCCES = 1;
-static const uint8_t FAILURE = 0;
+static const int SUCCES = 1;
+static const int FAILURE = 0;
 extern int idxCrtAtom;
 
 void err_msg(char *s);
