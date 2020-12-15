@@ -384,7 +384,7 @@ int getNextTk() // get next token (atom lexical)
             addAtom(FINISH);
             return FINISH;
         default:
-            printf("Stare invalida %d\n", state);
+            printf("Invalid state %d.\n", state);
         }
     }
 }
