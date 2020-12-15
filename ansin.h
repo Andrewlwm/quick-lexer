@@ -8,7 +8,7 @@ extern int idxCrtAtom;
 
 void err_msg(char *s);
 
-// program :: = (defVar | defFunc | block) * FINISH int program();
+// program :: = (defVar | defFunc | block) * FINISH
 int program();
 //defVar ::= VAR ID COLON baseType SEMICOLON
 int defVar();
