@@ -1,6 +1,5 @@
 #ifndef __ANSIN_H
 #define __ANSIN_H
-#include <stdint-gcc.h>
 
 static const int SUCCES = 1;
 static const int FAILURE = 0;
